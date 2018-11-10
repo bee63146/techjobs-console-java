@@ -43,6 +43,8 @@ public class TechJobs {
 
                     ArrayList<String> results = JobData.findAll(columnChoice);
 
+                    results = JobData.sortColumn(results);
+
                     System.out.println("\n*** All " + columnChoices.get(columnChoice) + " Values ***");
 
                     // Print list of skills, employers, etc
@@ -61,7 +63,9 @@ public class TechJobs {
                 String searchTerm = in.nextLine();
 
                 if (searchField.equals("all")) {
-                    System.out.println("Search all fields not yet implemented.");
+
+                    printJobs(JobData.findByValue(searchTerm));
+
                 } else {
                     printJobs(JobData.findByColumnAndValue(searchField, searchTerm));
                 }
@@ -110,7 +114,16 @@ public class TechJobs {
 
     // Print a list of jobs
     private static void printJobs(ArrayList<HashMap<String, String>> someJobs) {
-
-        System.out.println("printJobs is not implemented yet");
+        int i = 0;
+        ArrayList<HashMap<String, String>> jobs = JobData.sort(someJobs);
+        for(HashMap<String, String> job:jobs){
+            System.out.println("********** "+job.get("name")+" ************");
+            System.out.println("\tPosition Type: "+job.get("position type"));
+            System.out.println("\tEmployer: "+job.get("employer"));
+            System.out.println("\tLocation: "+job.get("location"));
+            System.out.println("\tCore Competency: "+job.get("core competency"));
+            i++;
+        }
     }
+
 }
