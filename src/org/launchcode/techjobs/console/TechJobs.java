@@ -2,7 +2,12 @@ package org.launchcode.techjobs.console;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
+import java.io.FileNotFoundException;
+import java.io.File;
+
+
 
 /**
  * Created by LaunchCode
@@ -11,7 +16,7 @@ public class TechJobs {
 
     private static Scanner in = new Scanner(System.in);
 
-    public static void main (String[] args) {
+    public static void main (String[] args) throws FileNotFoundException {
 
         // Initialize our field map with key/name pairs
         HashMap<String, String> columnChoices = new HashMap<>();
@@ -43,8 +48,6 @@ public class TechJobs {
 
                     ArrayList<String> results = JobData.findAll(columnChoice);
 
-                    results = JobData.sortColumn(results);
-
                     System.out.println("\n*** All " + columnChoices.get(columnChoice) + " Values ***");
 
                     // Print list of skills, employers, etc
@@ -60,12 +63,11 @@ public class TechJobs {
 
                 // What is their search term?
                 System.out.println("\nSearch term: ");
-                String searchTerm = in.nextLine();
+                String searchTerm = in.nextLine().toLowerCase();
+
 
                 if (searchField.equals("all")) {
-
                     printJobs(JobData.findByValue(searchTerm));
-
                 } else {
                     printJobs(JobData.findByColumnAndValue(searchField, searchTerm));
                 }
@@ -113,17 +115,17 @@ public class TechJobs {
     }
 
     // Print a list of jobs
-    private static void printJobs(ArrayList<HashMap<String, String>> someJobs) {
-        int i = 0;
-        ArrayList<HashMap<String, String>> jobs = JobData.sort(someJobs);
-        for(HashMap<String, String> job:jobs){
-            System.out.println("********** "+job.get("name")+" ************");
-            System.out.println("\tPosition Type: "+job.get("position type"));
-            System.out.println("\tEmployer: "+job.get("employer"));
-            System.out.println("\tLocation: "+job.get("location"));
-            System.out.println("\tCore Competency: "+job.get("core competency"));
-            i++;
+    private static void printJobs(ArrayList<HashMap<String, String>> someJobs) throws  FileNotFoundException{
+        if (someJobs.size() == 0) {
+            System.out.println("There are no results.");
+        }
+
+        for (HashMap<String, String> job : someJobs) {
+            System.out.println("*****");
+            for (Map.Entry<String, String> row : job.entrySet()) {
+                System.out.println(row.getKey() + ": " + row.getValue());
+            }
+            System.out.println("*****\n");
         }
     }
-
 }
